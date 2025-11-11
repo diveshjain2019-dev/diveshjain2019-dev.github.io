@@ -1,427 +1,692 @@
-import React, { useState, useEffect } from 'react';
-import { BarChart3, Brain, TrendingUp, Mail, Linkedin, ChevronRight } from 'lucide-react';
-
-export default function Portfolio() {
-  const [activeProject, setActiveProject] = useState(null);
-  const [scrollY, setScrollY] = useState(0);
-  const [activeTab, setActiveTab] = useState('projects');
-
-  useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const projects = [
-    {
-      id: 1,
-      title: "AI Supply Chain Risk Management Platform",
-      status: "In Progress",
-      icon: <Brain className="w-6 h-6" />,
-      description: "Full-stack platform for predictive supplier risk analysis",
-      highlights: [
-        "Predicting supplier risks across 500+ vendors with ML models",
-        "55% accuracy in identifying delivery disruptions",
-        "60% reduction in manual assessment time",
-        "Multi-tier supply chain monitoring with n8n automation",
-        "Real-time risk tracking and resilience index calculation"
-      ],
-      tech: ["Supabase", "Lovable", "Machine Learning", "n8n", "Interactive Dashboards"],
-      color: "from-blue-500 to-cyan-500"
-    },
-    {
-      id: 2,
-      title: "Smart JD Auditor",
-      status: "Completed",
-      icon: <BarChart3 className="w-6 h-6" />,
-      description: "AI-driven job description quality assessment framework",
-      highlights: [
-        "95% reduction in poor-quality job descriptions",
-        "90% enhancement in role-skill alignment validation",
-        "NLP and LLM-powered semantic matching",
-        "Automated quality scoring with zero-shot classification",
-        "Structured scoring systems for JD evaluation"
-      ],
-      tech: ["NLP", "LLMs", "LangChain", "Embedding Models", "Zero-shot Classification"],
-      color: "from-violet-500 to-purple-500"
-    },
-    {
-      id: 3,
-      title: "Salesflow",
-      status: "Freelance",
-      icon: <TrendingUp className="w-6 h-6" />,
-      description: "Sales monitoring solution for primary and secondary tracking",
-      highlights: [
-        "Delivered MVP for sales monitoring solution",
-        "80% reduction in manual tracking efforts",
-        "8% revenue boost through enhanced sales visibility",
-        "Defined product roadmap and GTM strategy",
-        "Iterative feedback integration with stakeholders"
-      ],
-      tech: ["Product Strategy", "MVP Development", "Sales Analytics", "Stakeholder Management"],
-      color: "from-emerald-500 to-teal-500"
-    },
-    {
-      id: 4,
-      title: "Dynamic Batching Optimization",
-      status: "Completed",
-      icon: <BarChart3 className="w-6 h-6" />,
-      description: "Multidimensional analysis for logistics batching optimization",
-      highlights: [
-        "Optimized batching configuration (Wait Time & Haversine Distance)",
-        "Reduced breaches with minimal impact on O2A metrics",
-        "A/B testing for same-route batching configurations",
-        "Data-driven deployment and rollback strategies",
-        "Comprehensive performance analysis"
-      ],
-      tech: ["A/B Testing", "Geospatial Analysis", "Performance Optimization", "Data Analytics"],
-      color: "from-orange-500 to-red-500"
-    }
-  ];
-
-  return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <div className="relative bg-white overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-50 to-gray-100 opacity-50" />
-        <div className="relative max-w-5xl mx-auto px-6 py-24">
-          <div 
-            className="transform transition-all duration-1000 ease-out"
-            style={{
-              opacity: Math.max(0, 1 - scrollY / 300),
-              transform: `translateY(${scrollY * 0.3}px)`
-            }}
-          >
-            <div className="flex items-center space-x-8 mb-8">
-              <div className="w-40 h-40 rounded-full bg-gradient-to-br from-blue-600 to-violet-600 flex items-center justify-center text-white text-5xl font-light overflow-hidden">
-              <img src="https://drive.google.com/uc?export=view&id=1a0WfQ2DC6iwbHniyiV6irRMe8AoQqDj8" alt="Divesh Jain" className="w-full h-full object-cover" />
-              </div>
-              <div>
-                <h1 className="text-5xl font-light text-gray-900 mb-2">
-                  Divesh Jain
-                </h1>
-                <p className="text-xl text-gray-600">
-                  Seeking Business Analyst / Data Scientist roles
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Divesh Jain - Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(to right, #2563eb, #7c3aed);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .project-card {
+            transition: all 0.3s ease;
+        }
+        
+        .project-card:hover {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .project-icon {
+            transition: transform 0.3s ease;
+        }
+        
+        .project-card:hover .project-icon {
+            transform: scale(1.1);
+        }
+        
+        .project-details {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, opacity 0.5s ease;
+        }
+        
+        .project-card:hover .project-details {
+            max-height: 500px;
+            opacity: 1;
+        }
+        
+        .tab-button {
+            position: relative;
+        }
+        
+        .tab-indicator {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #2563eb;
+        }
+        
+        .hidden-tab {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Hero Section -->
+    <div class="relative bg-white overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-gray-50 to-gray-100 opacity-50"></div>
+        <div class="relative max-w-5xl mx-auto px-6 py-24">
+            <div id="hero-content" class="transition-all duration-1000">
+                <div class="flex items-center space-x-8 mb-8">
+                    <div class="w-40 h-40 rounded-full bg-gradient-to-br from-blue-600 to-violet-600 flex items-center justify-center text-white text-5xl font-light overflow-hidden">
+                        <!-- Replace this div with your actual image -->
+                        <img src="https://drive.google.com/uc?export=view&id=1a0WfQ2DC6iwbHniyiV6irRMe8AoQqDj8" alt="Divesh Jain" className="w-full h-full object-cover" />
+                        DJ
+                    </div>
+                    <div>
+                        <h1 class="text-5xl font-light text-gray-900 mb-2">
+                            Divesh Jain
+                        </h1>
+                        <p class="text-xl text-gray-600">
+                            Seeking Business Analyst / Data Scientist roles
+                        </p>
+                    </div>
+                </div>
+                <p class="text-lg text-gray-600 max-w-2xl leading-relaxed">
+                    Transforming complex business challenges into intelligent, data-driven solutions through advanced analytics and machine learning.
                 </p>
-              </div>
             </div>
-            <p className="text-lg text-gray-600 max-w-2xl leading-relaxed">
-              Transforming complex business challenges into intelligent, data-driven solutions through advanced analytics and machine learning.
-            </p>
-          </div>
         </div>
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent" />
-      </div>
-
-      {/* Projects Section */}
-      <div className="max-w-5xl mx-auto px-6 py-20">
-        {/* Tab Navigation */}
-        <div className="flex space-x-1 mb-12 border-b border-gray-200">
-          <button
-            onClick={() => setActiveTab('projects')}
-            className={`px-6 py-3 text-sm font-medium transition-colors relative ${
-              activeTab === 'projects'
-                ? 'text-blue-600'
-                : 'text-gray-600 hover:text-gray-900'
-            }`}
-          >
-            Projects
-            {activeTab === 'projects' && (
-              <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600" />
-            )}
-          </button>
-          <button
-            onClick={() => setActiveTab('resume')}
-            className={`px-6 py-3 text-sm font-medium transition-colors relative ${
-              activeTab === 'resume'
-                ? 'text-blue-600'
-                : 'text-gray-600 hover:text-gray-900'
-            }`}
-          >
-            Resume
-            {activeTab === 'resume' && (
-              <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600" />
-            )}
-          </button>
-        </div>
-
-        {/* Projects Tab */}
-        {activeTab === 'projects' && (
-          <>
-            <h2 className="text-3xl font-light text-gray-900 mb-12">Featured Projects</h2>
-            
-            <div className="space-y-6">
-              {projects.map((project, index) => (
-                <div
-                  key={project.id}
-                  className="group bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer"
-                  onMouseEnter={() => setActiveProject(project.id)}
-                  onMouseLeave={() => setActiveProject(null)}
-                >
-                  <div className="p-8">
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex items-start space-x-4">
-                        <div className={`p-3 rounded-lg bg-gradient-to-br ${project.color} text-white transform group-hover:scale-110 transition-transform duration-300`}>
-                          {project.icon}
-                        </div>
-                        <div>
-                          <h3 className="text-2xl font-medium text-gray-900 group-hover:text-blue-600 transition-colors">
-                            {project.title}
-                          </h3>
-                          <p className="text-sm text-gray-500 mt-1">{project.description}</p>
-                        </div>
-                      </div>
-                      <span className="px-3 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-600">
-                        {project.status}
-                      </span>
-                    </div>
-
-                    <div className={`overflow-hidden transition-all duration-500 ${activeProject === project.id ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
-                      <div className="pt-6 border-t border-gray-100 mt-6">
-                        <h4 className="text-sm font-medium text-gray-700 mb-3">Key Achievements</h4>
-                        <ul className="space-y-2">
-                          {project.highlights.map((highlight, idx) => (
-                            <li key={idx} className="flex items-start text-gray-600 text-sm">
-                              <ChevronRight className="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" />
-                              <span>{highlight}</span>
-                            </li>
-                          ))}
-                        </ul>
-                        
-                        <div className="mt-6">
-                          <h4 className="text-sm font-medium text-gray-700 mb-3">Technologies</h4>
-                          <div className="flex flex-wrap gap-2">
-                            {project.tech.map((tech, idx) => (
-                              <span key={idx} className="px-3 py-1 text-xs bg-gray-50 text-gray-700 rounded-full border border-gray-200">
-                                {tech}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    {activeProject !== project.id && (
-                      <p className="text-sm text-gray-400 mt-4 group-hover:text-blue-600 transition-colors">
-                        Hover to see details →
-                      </p>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </>
-        )}
-
-        {/* Resume Tab */}
-        {activeTab === 'resume' && (
-          <div className="space-y-12">
-            {/* Download Resume Button */}
-            <div className="flex justify-end">
-              <a
-                href="#"
-                download="Divesh_Jain_Resume.pdf"
-                className="flex items-center space-x-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                <span>Download Resume</span>
-              </a>
-            </div>
-            {/* Work Experience */}
-            <section>
-              <h2 className="text-3xl font-light text-gray-900 mb-2">Work Experience</h2>
-              <p className="text-gray-500 mb-8">5 Years</p>
-              
-              <div className="space-y-8">
-                {/* Zepto */}
-                <div className="bg-white rounded-lg border border-gray-200 p-8">
-                  <div className="flex justify-between items-start mb-4">
-                    <div>
-                      <h3 className="text-xl font-medium text-gray-900">Data Scientist, Product</h3>
-                      <p className="text-blue-600 font-medium mt-1">Zepto</p>
-                      <p className="text-sm text-gray-500 mt-1">A 10 min grocery delivery startup, YCW21</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm font-medium text-gray-700">May 2022 – Aug 2024</p>
-                      <p className="text-sm text-gray-500">Mumbai, India</p>
-                    </div>
-                  </div>
-                  <ul className="space-y-2 mt-6">
-                    <li className="flex items-start text-gray-600 text-sm">
-                      <ChevronRight className="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" />
-                      <span>Developed data-driven insights from user behavior across 1M+ monthly active users to inform product roadmap, leading to 8% increase in customer retention through A/B testing and user segmentation analysis.</span>
-                    </li>
-                    <li className="flex items-start text-gray-600 text-sm">
-                      <ChevronRight className="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" />
-                      <span>Designed and ran A/B tests to validate hypotheses on optimal delivery time thresholds (25 minutes), implementing statistical testing methodologies that improved customer adoption and reduced churn by 15%.</span>
-                    </li>
-                    <li className="flex items-start text-gray-600 text-sm">
-                      <ChevronRight className="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" />
-                      <span>Built comprehensive dashboards using BI tools (Superset) to track company-wide metrics and feature performance, implementing 70+ KPIs including user engagement, conversion rates, and growth metrics.</span>
-                    </li>
-                    <li className="flex items-start text-gray-600 text-sm">
-                      <ChevronRight className="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" />
-                      <span>Developed machine learning models for demand forecasting and inventory optimization, improving first-mile operational efficiency by 25% and reducing stockout incidents across 15+ city operations.</span>
-                    </li>
-                    <li className="flex items-start text-gray-600 text-sm">
-                      <ChevronRight className="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" />
-                      <span>Implemented clustering algorithms for customer segmentation, identifying high-value user cohorts that enabled targeted product features and improved conversion rates by 12%.</span>
-                    </li>
-                    <li className="flex items-start text-gray-600 text-sm">
-                      <ChevronRight className="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" />
-                      <span>Conducted sentiment analysis and NLP on 100K+ customer feedback entries to identify trends, driving 15+ product improvements that increased user satisfaction by 18%.</span>
-                    </li>
-                  </ul>
-                </div>
-
-                {/* Fractal Analytics */}
-                <div className="bg-white rounded-lg border border-gray-200 p-8">
-                  <div className="flex justify-between items-start mb-4">
-                    <div>
-                      <h3 className="text-xl font-medium text-gray-900">Analytics Consultant</h3>
-                      <p className="text-blue-600 font-medium mt-1">Fractal Analytics</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm font-medium text-gray-700">Aug 2019 – May 2022</p>
-                      <p className="text-sm text-gray-500">Mumbai, India</p>
-                    </div>
-                  </div>
-                  <ul className="space-y-2 mt-6">
-                    <li className="flex items-start text-gray-600 text-sm">
-                      <ChevronRight className="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" />
-                      <span>Developed data-driven solutions for consumer brands including Mondelez International, building analytics products that reduced report generation time by 95% and improved operational efficiency.</span>
-                    </li>
-                    <li className="flex items-start text-gray-600 text-sm">
-                      <ChevronRight className="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" />
-                      <span>Designed and implemented brand performance dashboards using BI tools (Tableau, Power BI), enabling stakeholders to interpret complex data sets and contributing to 10% increase in account revenue.</span>
-                    </li>
-                    <li className="flex items-start text-gray-600 text-sm">
-                      <ChevronRight className="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" />
-                      <span>Led A/B testing initiatives for 10+ high-value consumer product clients, creating ETL pipelines and data models that improved reporting efficiency by 40%.</span>
-                    </li>
-                    <li className="flex items-start text-gray-600 text-sm">
-                      <ChevronRight className="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" />
-                      <span>Built 25+ interactive dashboards in Tableau and Power BI, tracking growth metrics across 500M+ data points, enabling data-driven decisions for 50+ stakeholders and reducing report generation time by 40%.</span>
-                    </li>
-                    <li className="flex items-start text-gray-600 text-sm">
-                      <ChevronRight className="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" />
-                      <span>Established data governance protocols and leveraged cohort, funnel, and survival analysis to identify behavioral trends, guiding product roadmap and retention strategies.</span>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </section>
-
-            {/* Skills */}
-            <section>
-              <h2 className="text-3xl font-light text-gray-900 mb-8">Skills</h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-white rounded-lg border border-gray-200 p-6">
-                  <h3 className="text-sm font-medium text-gray-700 mb-4">Languages & Databases</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {['Python', 'SQL (Advanced)', 'MySQL', 'R', 'Spark', 'Oracle', 'PySpark', 'Snowflake'].map((skill) => (
-                      <span key={skill} className="px-3 py-1 text-xs bg-blue-50 text-blue-700 rounded-full">
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-                <div className="bg-white rounded-lg border border-gray-200 p-6">
-                  <h3 className="text-sm font-medium text-gray-700 mb-4">Technologies & Tools</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {['Tableau', 'Power BI', 'Alteryx', 'Hadoop', 'HDFS', 'MapReduce', 'Apache Superset', 'REST API', 'Airflow'].map((skill) => (
-                      <span key={skill} className="px-3 py-1 text-xs bg-violet-50 text-violet-700 rounded-full">
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-                <div className="bg-white rounded-lg border border-gray-200 p-6">
-                  <h3 className="text-sm font-medium text-gray-700 mb-4">AI Stack</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {['Lovable', 'Supabase', 'n8n', 'Zapier', 'Cursor'].map((skill) => (
-                      <span key={skill} className="px-3 py-1 text-xs bg-emerald-50 text-emerald-700 rounded-full">
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            {/* Education */}
-            <section>
-              <h2 className="text-3xl font-light text-gray-900 mb-8">Education</h2>
-              <div className="space-y-6">
-                <div className="bg-white rounded-lg border border-gray-200 p-6">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="text-lg font-medium text-gray-900">Master of Science in Information Management</h3>
-                      <p className="text-blue-600 font-medium mt-1">University of Washington</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm font-medium text-gray-700">Aug 2025</p>
-                      <p className="text-sm text-gray-500">Seattle, WA</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="bg-white rounded-lg border border-gray-200 p-6">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="text-lg font-medium text-gray-900">Bachelor of Engineering in Computer Science</h3>
-                      <p className="text-blue-600 font-medium mt-1">Rajiv Gandhi Proudyogiki Vishwavidyalaya</p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-sm font-medium text-gray-700">June 2019</p>
-                      <p className="text-sm text-gray-500">Indore, India</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
-          </div>
-        )}
-      </div>
-
-      {/* Contact Section */}
-      <div className="bg-white border-t border-gray-200">
-        <div className="max-w-5xl mx-auto px-6 py-16">
-          <div className="text-center">
-            <h2 className="text-3xl font-light text-gray-900 mb-4">Let's Connect</h2>
-            <p className="text-gray-600 mb-8 max-w-xl mx-auto">
-              Interested in collaborating or discussing business analytics solutions? I'd love to hear from you.
-            </p>
-            
-            <div className="flex justify-center space-x-6">
-              <a
-                href="mailto:diveshjain2019@gmail.com"
-                className="flex items-center space-x-2 px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
-              >
-                <Mail className="w-5 h-5" />
-                <span>Email Me</span>
-              </a>
-              <a
-                href="https://www.linkedin.com/in/divesh-jain/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center space-x-2 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:border-gray-400 hover:bg-gray-50 transition-colors"
-              >
-                <Linkedin className="w-5 h-5" />
-                <span>LinkedIn</span>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Footer */}
-      <div className="bg-gray-50 border-t border-gray-200">
-        <div className="max-w-5xl mx-auto px-6 py-8 text-center text-sm text-gray-500">
-          <p>© 2025 Divesh Jain. Crafted with precision.</p>
-        </div>
-      </div>
+        <div class="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
     </div>
-  );
-}
+
+    <!-- Main Content -->
+    <div class="max-w-5xl mx-auto px-6 py-20">
+        <!-- Tab Navigation -->
+        <div class="flex space-x-1 mb-12 border-b border-gray-200">
+            <button onclick="switchTab('projects')" id="tab-projects" class="tab-button px-6 py-3 text-sm font-medium text-blue-600 transition-colors">
+                Projects
+                <div class="tab-indicator"></div>
+            </button>
+            <button onclick="switchTab('resume')" id="tab-resume" class="tab-button px-6 py-3 text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
+                Resume
+            </button>
+        </div>
+
+        <!-- Projects Tab -->
+        <div id="content-projects">
+            <h2 class="text-3xl font-light text-gray-900 mb-12">Featured Projects</h2>
+            
+            <div class="space-y-6">
+                <!-- Project 1: AI Supply Chain -->
+                <div class="project-card group bg-white rounded-lg border border-gray-200 overflow-hidden cursor-pointer">
+                    <div class="p-8">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex items-start space-x-4">
+                                <div class="project-icon p-3 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 text-white">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-2xl font-medium text-gray-900 group-hover:text-blue-600 transition-colors">
+                                        AI Supply Chain Risk Management Platform
+                                    </h3>
+                                    <p class="text-sm text-gray-500 mt-1">Full-stack platform for predictive supplier risk analysis</p>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-600">In Progress</span>
+                        </div>
+
+                        <div class="project-details">
+                            <div class="pt-6 border-t border-gray-100 mt-6">
+                                <h4 class="text-sm font-medium text-gray-700 mb-3">Key Achievements</h4>
+                                <ul class="space-y-2">
+                                    <li class="flex items-start text-gray-600 text-sm">
+                                        <svg class="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                        </svg>
+                                        <span>Predicting supplier risks across 500+ vendors with ML models</span>
+                                    </li>
+                                    <li class="flex items-start text-gray-600 text-sm">
+                                        <svg class="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                        </svg>
+                                        <span>55% accuracy in identifying delivery disruptions</span>
+                                    </li>
+                                    <li class="flex items-start text-gray-600 text-sm">
+                                        <svg class="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                        </svg>
+                                        <span>60% reduction in manual assessment time</span>
+                                    </li>
+                                    <li class="flex items-start text-gray-600 text-sm">
+                                        <svg class="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                        </svg>
+                                        <span>Multi-tier supply chain monitoring with n8n automation</span>
+                                    </li>
+                                    <li class="flex items-start text-gray-600 text-sm">
+                                        <svg class="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                        </svg>
+                                        <span>Real-time risk tracking and resilience index calculation</span>
+                                    </li>
+                                </ul>
+                                
+                                <div class="mt-6">
+                                    <h4 class="text-sm font-medium text-gray-700 mb-3">Technologies</h4>
+                                    <div class="flex flex-wrap gap-2">
+                                        <span class="px-3 py-1 text-xs bg-gray-50 text-gray-700 rounded-full border border-gray-200">Supabase</span>
+                                        <span class="px-3 py-1 text-xs bg-gray-50 text-gray-700 rounded-full border border-gray-200">Lovable</span>
+                                        <span class="px-3 py-1 text-xs bg-gray-50 text-gray-700 rounded-full border border-gray-200">Machine Learning</span>
+                                        <span class="px-3 py-1 text-xs bg-gray-50 text-gray-700 rounded-full border border-gray-200">n8n</span>
+                                        <span class="px-3 py-1 text-xs bg-gray-50 text-gray-700 rounded-full border border-gray-200">Interactive Dashboards</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="text-sm text-gray-400 mt-4 group-hover:text-blue-600 transition-colors show-on-not-hover">
+                            Hover to see details →
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Project 2: Smart JD Auditor -->
+                <div class="project-card group bg-white rounded-lg border border-gray-200 overflow-hidden cursor-pointer">
+                    <div class="p-8">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex items-start space-x-4">
+                                <div class="project-icon p-3 rounded-lg bg-gradient-to-br from-violet-500 to-purple-500 text-white">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-2xl font-medium text-gray-900 group-hover:text-blue-600 transition-colors">
+                                        Smart JD Auditor
+                                    </h3>
+                                    <p class="text-sm text-gray-500 mt-1">AI-driven job description quality assessment framework</p>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-600">Completed</span>
+                        </div>
+
+                        <div class="project-details">
+                            <div class="pt-6 border-t border-gray-100 mt-6">
+                                <h4 class="text-sm font-medium text-gray-700 mb-3">Key Achievements</h4>
+                                <ul class="space-y-2">
+                                    <li class="flex items-start text-gray-600 text-sm">
+                                        <svg class="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                        </svg>
+                                        <span>95% reduction in poor-quality job descriptions</span>
+                                    </li>
+                                    <li class="flex items-start text-gray-600 text-sm">
+                                        <svg class="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                        </svg>
+                                        <span>90% enhancement in role-skill alignment validation</span>
+                                    </li>
+                                    <li class="flex items-start text-gray-600 text-sm">
+                                        <svg class="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                        </svg>
+                                        <span>NLP and LLM-powered semantic matching</span>
+                                    </li>
+                                    <li class="flex items-start text-gray-600 text-sm">
+                                        <svg class="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                        </svg>
+                                        <span>Automated quality scoring with zero-shot classification</span>
+                                    </li>
+                                    <li class="flex items-start text-gray-600 text-sm">
+                                        <svg class="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                        </svg>
+                                        <span>Structured scoring systems for JD evaluation</span>
+                                    </li>
+                                </ul>
+                                
+                                <div class="mt-6">
+                                    <h4 class="text-sm font-medium text-gray-700 mb-3">Technologies</h4>
+                                    <div class="flex flex-wrap gap-2">
+                                        <span class="px-3 py-1 text-xs bg-gray-50 text-gray-700 rounded-full border border-gray-200">NLP</span>
+                                        <span class="px-3 py-1 text-xs bg-gray-50 text-gray-700 rounded-full border border-gray-200">LLMs</span>
+                                        <span class="px-3 py-1 text-xs bg-gray-50 text-gray-700 rounded-full border border-gray-200">LangChain</span>
+                                        <span class="px-3 py-1 text-xs bg-gray-50 text-gray-700 rounded-full border border-gray-200">Embedding Models</span>
+                                        <span class="px-3 py-1 text-xs bg-gray-50 text-gray-700 rounded-full border border-gray-200">Zero-shot Classification</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="text-sm text-gray-400 mt-4 group-hover:text-blue-600 transition-colors show-on-not-hover">
+                            Hover to see details →
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Project 3: Salesflow -->
+                <div class="project-card group bg-white rounded-lg border border-gray-200 overflow-hidden cursor-pointer">
+                    <div class="p-8">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex items-start space-x-4">
+                                <div class="project-icon p-3 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-500 text-white">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-2xl font-medium text-gray-900 group-hover:text-blue-600 transition-colors">
+                                        Salesflow
+                                    </h3>
+                                    <p class="text-sm text-gray-500 mt-1">Sales monitoring solution for primary and secondary tracking</p>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-600">Freelance</span>
+                        </div>
+
+                        <div class="project-details">
+                            <div class="pt-6 border-t border-gray-100 mt-6">
+                                <h4 class="text-sm font-medium text-gray-700 mb-3">Key Achievements</h4>
+                                <ul class="space-y-2">
+                                    <li class="flex items-start text-gray-600 text-sm">
+                                        <svg class="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                        </svg>
+                                        <span>Delivered MVP for sales monitoring solution</span>
+                                    </li>
+                                    <li class="flex items-start text-gray-600 text-sm">
+                                        <svg class="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                        </svg>
+                                        <span>80% reduction in manual tracking efforts</span>
+                                    </li>
+                                    <li class="flex items-start text-gray-600 text-sm">
+                                        <svg class="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                        </svg>
+                                        <span>8% revenue boost through enhanced sales visibility</span>
+                                    </li>
+                                    <li class="flex items-start text-gray-600 text-sm">
+                                        <svg class="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                        </svg>
+                                        <span>Defined product roadmap and GTM strategy</span>
+                                    </li>
+                                    <li class="flex items-start text-gray-600 text-sm">
+                                        <svg class="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                        </svg>
+                                        <span>Iterative feedback integration with stakeholders</span>
+                                    </li>
+                                </ul>
+                                
+                                <div class="mt-6">
+                                    <h4 class="text-sm font-medium text-gray-700 mb-3">Technologies</h4>
+                                    <div class="flex flex-wrap gap-2">
+                                        <span class="px-3 py-1 text-xs bg-gray-50 text-gray-700 rounded-full border border-gray-200">Product Strategy</span>
+                                        <span class="px-3 py-1 text-xs bg-gray-50 text-gray-700 rounded-full border border-gray-200">MVP Development</span>
+                                        <span class="px-3 py-1 text-xs bg-gray-50 text-gray-700 rounded-full border border-gray-200">Sales Analytics</span>
+                                        <span class="px-3 py-1 text-xs bg-gray-50 text-gray-700 rounded-full border border-gray-200">Stakeholder Management</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="text-sm text-gray-400 mt-4 group-hover:text-blue-600 transition-colors show-on-not-hover">
+                            Hover to see details →
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Project 4: Dynamic Batching -->
+                <div class="project-card group bg-white rounded-lg border border-gray-200 overflow-hidden cursor-pointer">
+                    <div class="p-8">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex items-start space-x-4">
+                                <div class="project-icon p-3 rounded-lg bg-gradient-to-br from-orange-500 to-red-500 text-white">
+                                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h3 class="text-2xl font-medium text-gray-900 group-hover:text-blue-600 transition-colors">
+                                        Dynamic Batching Optimization
+                                    </h3>
+                                    <p class="text-sm text-gray-500 mt-1">Multidimensional analysis for logistics batching optimization</p>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-600">Completed</span>
+                        </div>
+
+                        <div class="project-details">
+                            <div class="pt-6 border-t border-gray-100 mt-6">
+                                <h4 class="text-sm font-medium text-gray-700 mb-3">Key Achievements</h4>
+                                <ul class="space-y-2">
+                                    <li class="flex items-start text-gray-600 text-sm">
+                                        <svg class="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                        </svg>
+                                        <span>Optimized batching configuration (Wait Time & Haversine Distance)</span>
+                                    </li>
+                                    <li class="flex items-start text-gray-600 text-sm">
+                                        <svg class="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                        </svg>
+                                        <span>Reduced breaches with minimal impact on O2A metrics</span>
+                                    </li>
+                                    <li class="flex items-start text-gray-600 text-sm">
+                                        <svg class="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                        </svg>
+                                        <span>A/B testing for same-route batching configurations</span>
+                                    </li>
+                                    <li class="flex items-start text-gray-600 text-sm">
+                                        <svg class="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                        </svg>
+                                        <span>Data-driven deployment and rollback strategies</span>
+                                    </li>
+                                    <li class="flex items-start text-gray-600 text-sm">
+                                        <svg class="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                        </svg>
+                                        <span>Comprehensive performance analysis</span>
+                                    </li>
+                                </ul>
+                                
+                                <div class="mt-6">
+                                    <h4 class="text-sm font-medium text-gray-700 mb-3">Technologies</h4>
+                                    <div class="flex flex-wrap gap-2">
+                                        <span class="px-3 py-1 text-xs bg-gray-50 text-gray-700 rounded-full border border-gray-200">A/B Testing</span>
+                                        <span class="px-3 py-1 text-xs bg-gray-50 text-gray-700 rounded-full border border-gray-200">Geospatial Analysis</span>
+                                        <span class="px-3 py-1 text-xs bg-gray-50 text-gray-700 rounded-full border border-gray-200">Performance Optimization</span>
+                                        <span class="px-3 py-1 text-xs bg-gray-50 text-gray-700 rounded-full border border-gray-200">Data Analytics</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="text-sm text-gray-400 mt-4 group-hover:text-blue-600 transition-colors show-on-not-hover">
+                            Hover to see details →
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resume Tab -->
+        <div id="content-resume" class="hidden-tab">
+            <div class="space-y-12">
+                <!-- Download Resume Button -->
+                <div class="flex justify-end">
+                    <a href="#" download="Divesh_Jain_Resume.pdf" class="flex items-center space-x-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                        <span>Download Resume</span>
+                    </a>
+                </div>
+
+                <!-- Work Experience -->
+                <section>
+                    <h2 class="text-3xl font-light text-gray-900 mb-2">Work Experience</h2>
+                    <p class="text-gray-500 mb-8">5 Years</p>
+                    
+                    <div class="space-y-8">
+                        <!-- Zepto -->
+                        <div class="bg-white rounded-lg border border-gray-200 p-8">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <h3 class="text-xl font-medium text-gray-900">Data Scientist, Product</h3>
+                                    <p class="text-blue-600 font-medium mt-1">Zepto</p>
+                                    <p class="text-sm text-gray-500 mt-1">A 10 min grocery delivery startup, YCW21</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-sm font-medium text-gray-700">May 2022 – Aug 2024</p>
+                                    <p class="text-sm text-gray-500">Mumbai, India</p>
+                                </div>
+                            </div>
+                            <ul class="space-y-2 mt-6">
+                                <li class="flex items-start text-gray-600 text-sm">
+                                    <svg class="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                    <span>Developed data-driven insights from user behavior across 1M+ monthly active users to inform product roadmap, leading to 8% increase in customer retention through A/B testing and user segmentation analysis.</span>
+                                </li>
+                                <li class="flex items-start text-gray-600 text-sm">
+                                    <svg class="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                    <span>Designed and ran A/B tests to validate hypotheses on optimal delivery time thresholds (25 minutes), implementing statistical testing methodologies that improved customer adoption and reduced churn by 15%.</span>
+                                </li>
+                                <li class="flex items-start text-gray-600 text-sm">
+                                    <svg class="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                    <span>Built comprehensive dashboards using BI tools (Superset) to track company-wide metrics and feature performance, implementing 70+ KPIs including user engagement, conversion rates, and growth metrics.</span>
+                                </li>
+                                <li class="flex items-start text-gray-600 text-sm">
+                                    <svg class="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                    <span>Developed machine learning models for demand forecasting and inventory optimization, improving first-mile operational efficiency by 25% and reducing stockout incidents across 15+ city operations.</span>
+                                </li>
+                                <li class="flex items-start text-gray-600 text-sm">
+                                    <svg class="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                    <span>Implemented clustering algorithms for customer segmentation, identifying high-value user cohorts that enabled targeted product features and improved conversion rates by 12%.</span>
+                                </li>
+                                <li class="flex items-start text-gray-600 text-sm">
+                                    <svg class="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                    <span>Conducted sentiment analysis and NLP on 100K+ customer feedback entries to identify trends, driving 15+ product improvements that increased user satisfaction by 18%.</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Fractal Analytics -->
+                        <div class="bg-white rounded-lg border border-gray-200 p-8">
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <h3 class="text-xl font-medium text-gray-900">Analytics Consultant</h3>
+                                    <p class="text-blue-600 font-medium mt-1">Fractal Analytics</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-sm font-medium text-gray-700">Aug 2019 – May 2022</p>
+                                    <p class="text-sm text-gray-500">Mumbai, India</p>
+                                </div>
+                            </div>
+                            <ul class="space-y-2 mt-6">
+                                <li class="flex items-start text-gray-600 text-sm">
+                                    <svg class="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                    <span>Developed data-driven solutions for consumer brands including Mondelez International, building analytics products that reduced report generation time by 95% and improved operational efficiency.</span>
+                                </li>
+                                <li class="flex items-start text-gray-600 text-sm">
+                                    <svg class="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                    <span>Designed and implemented brand performance dashboards using BI tools (Tableau, Power BI), enabling stakeholders to interpret complex data sets and contributing to 10% increase in account revenue.</span>
+                                </li>
+                                <li class="flex items-start text-gray-600 text-sm">
+                                    <svg class="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                    <span>Led A/B testing initiatives for 10+ high-value consumer product clients, creating ETL pipelines and data models that improved reporting efficiency by 40%.</span>
+                                </li>
+                                <li class="flex items-start text-gray-600 text-sm">
+                                    <svg class="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                    <span>Built 25+ interactive dashboards in Tableau and Power BI, tracking growth metrics across 500M+ data points, enabling data-driven decisions for 50+ stakeholders and reducing report generation time by 40%.</span>
+                                </li>
+                                <li class="flex items-start text-gray-600 text-sm">
+                                    <svg class="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                    <span>Established data governance protocols and leveraged cohort, funnel, and survival analysis to identify behavioral trends, guiding product roadmap and retention strategies.</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Skills -->
+                <section>
+                    <h2 class="text-3xl font-light text-gray-900 mb-8">Skills</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="bg-white rounded-lg border border-gray-200 p-6">
+                            <h3 class="text-sm font-medium text-gray-700 mb-4">Languages & Databases</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 text-xs bg-blue-50 text-blue-700 rounded-full">Python</span>
+                                <span class="px-3 py-1 text-xs bg-blue-50 text-blue-700 rounded-full">SQL (Advanced)</span>
+                                <span class="px-3 py-1 text-xs bg-blue-50 text-blue-700 rounded-full">MySQL</span>
+                                <span class="px-3 py-1 text-xs bg-blue-50 text-blue-700 rounded-full">R</span>
+                                <span class="px-3 py-1 text-xs bg-blue-50 text-blue-700 rounded-full">Spark</span>
+                                <span class="px-3 py-1 text-xs bg-blue-50 text-blue-700 rounded-full">Oracle</span>
+                                <span class="px-3 py-1 text-xs bg-blue-50 text-blue-700 rounded-full">PySpark</span>
+                                <span class="px-3 py-1 text-xs bg-blue-50 text-blue-700 rounded-full">Snowflake</span>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-lg border border-gray-200 p-6">
+                            <h3 class="text-sm font-medium text-gray-700 mb-4">Technologies & Tools</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 text-xs bg-violet-50 text-violet-700 rounded-full">Tableau</span>
+                                <span class="px-3 py-1 text-xs bg-violet-50 text-violet-700 rounded-full">Power BI</span>
+                                <span class="px-3 py-1 text-xs bg-violet-50 text-violet-700 rounded-full">Alteryx</span>
+                                <span class="px-3 py-1 text-xs bg-violet-50 text-violet-700 rounded-full">Hadoop</span>
+                                <span class="px-3 py-1 text-xs bg-violet-50 text-violet-700 rounded-full">HDFS</span>
+                                <span class="px-3 py-1 text-xs bg-violet-50 text-violet-700 rounded-full">MapReduce</span>
+                                <span class="px-3 py-1 text-xs bg-violet-50 text-violet-700 rounded-full">Apache Superset</span>
+                                <span class="px-3 py-1 text-xs bg-violet-50 text-violet-700 rounded-full">REST API</span>
+                                <span class="px-3 py-1 text-xs bg-violet-50 text-violet-700 rounded-full">Airflow</span>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-lg border border-gray-200 p-6">
+                            <h3 class="text-sm font-medium text-gray-700 mb-4">AI Stack</h3>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 text-xs bg-emerald-50 text-emerald-700 rounded-full">Lovable</span>
+                                <span class="px-3 py-1 text-xs bg-emerald-50 text-emerald-700 rounded-full">Supabase</span>
+                                <span class="px-3 py-1 text-xs bg-emerald-50 text-emerald-700 rounded-full">n8n</span>
+                                <span class="px-3 py-1 text-xs bg-emerald-50 text-emerald-700 rounded-full">Zapier</span>
+                                <span class="px-3 py-1 text-xs bg-emerald-50 text-emerald-700 rounded-full">Cursor</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Education -->
+                <section>
+                    <h2 class="text-3xl font-light text-gray-900 mb-8">Education</h2>
+                    <div class="space-y-6">
+                        <div class="bg-white rounded-lg border border-gray-200 p-6">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h3 class="text-lg font-medium text-gray-900">Master of Science in Information Management</h3>
+                                    <p class="text-blue-600 font-medium mt-1">University of Washington</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-sm font-medium text-gray-700">Aug 2025</p>
+                                    <p class="text-sm text-gray-500">Seattle, WA</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-lg border border-gray-200 p-6">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h3 class="text-lg font-medium text-gray-900">Bachelor of Engineering in Computer Science</h3>
+                                    <p class="text-blue-600 font-medium mt-1">Rajiv Gandhi Proudyogiki Vishwavidyalaya</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-sm font-medium text-gray-700">June 2019</p>
+                                    <p class="text-sm text-gray-500">Indore, India</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contact Section -->
+    <div class="bg-white border-t border-gray-200">
+        <div class="max-w-5xl mx-auto px-6 py-16">
+            <div class="text-center">
+                <h2 class="text-3xl font-light text-gray-900 mb-4">Let's Connect</h2>
+                <p class="text-gray-600 mb-8 max-w-xl mx-auto">
+                    Interested in collaborating or discussing business analytics solutions? I'd love to hear from you.
+                </p>
+                
+                <div class="flex justify-center space-x-6">
+                    <a href="mailto:diveshjain2019@gmail.com" class="flex items-center space-x-2 px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                        <span>Email Me</span>
+                    </a>
+                    <a href="https://www.linkedin.com/in/divesh-jain/" target="_blank" rel="noopener noreferrer" class="flex items-center space-x-2 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:border-gray-400 hover:bg-gray-50 transition-colors">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"></path>
+                        </svg>
+                        <span>LinkedIn</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="bg-gray-50 border-t border-gray-200">
+        <div class="max-w-5xl mx-auto px-6 py-8 text-center text-sm text-gray-500">
+            <p>© 2025 Divesh Jain. Crafted with precision.</p>
+        </div>
+    </div>
+
+    <script>
+        // Tab Switching
+        function switchTab(tab) {
+            // Hide all tabs
+            document.getElementById('content-projects').classList.add('hidden-tab');
+            document.getElementById('content-resume').classList.add('hidden-tab');
+            
+            // Remove active styles from all tab buttons
+            document.getElementById('tab-projects').classList.remove('text-blue-600');
+            document.getElementById('tab-projects').classList.add('text-gray-600');
+            document.getElementById('tab-resume').classList.remove('text-blue-600');
+            document.getElementById('tab-resume').classList.add('text-gray-600');
+            
+            // Remove indicators
+            const indicators = document.querySelectorAll('.tab-indicator');
+            indicators.forEach(ind => ind.style.display = 'none');
+            
+            // Show selected tab
+            if (tab === 'projects') {
+                document.getElementById('content-projects').classList.remove('hidden-tab');
+                document.getElementById('tab-projects').classList.add('text-blue-600');
+                document.getElementById('tab-projects').classList.remove('text-gray-600');
+                document.querySelector('#tab-projects .tab-indicator').style.display = 'block';
+            } else if (tab === 'resume') {
+                document.getElementById('content-resume').classList.remove('hidden-tab');
+                document.getElementById('tab-resume').classList.add('text-blue-600');
+                document.getElementById('tab-resume').classList.remove('text-gray-600');
+                document.querySelector('#tab-resume .tab-indicator').style.display = 'block';
+            }
+        }
+        
+        // Parallax scroll effect
+        window.addEventListener('scroll', function() {
+            const heroContent = document.getElementById('hero-content');
+            const scrollY = window.scrollY;
+            
+            heroContent.style.opacity = Math.max(0, 1 - scrollY / 300);
+            heroContent.style.transform = `translateY(${scrollY * 0.3}px)`;
+        });
+    </script>
+</body>
+</html>
