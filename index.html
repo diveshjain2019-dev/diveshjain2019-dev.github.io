@@ -1,0 +1,427 @@
+import React, { useState, useEffect } from 'react';
+import { BarChart3, Brain, TrendingUp, Mail, Linkedin, ChevronRight } from 'lucide-react';
+
+export default function Portfolio() {
+  const [activeProject, setActiveProject] = useState(null);
+  const [scrollY, setScrollY] = useState(0);
+  const [activeTab, setActiveTab] = useState('projects');
+
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const projects = [
+    {
+      id: 1,
+      title: "AI Supply Chain Risk Management Platform",
+      status: "In Progress",
+      icon: <Brain className="w-6 h-6" />,
+      description: "Full-stack platform for predictive supplier risk analysis",
+      highlights: [
+        "Predicting supplier risks across 500+ vendors with ML models",
+        "55% accuracy in identifying delivery disruptions",
+        "60% reduction in manual assessment time",
+        "Multi-tier supply chain monitoring with n8n automation",
+        "Real-time risk tracking and resilience index calculation"
+      ],
+      tech: ["Supabase", "Lovable", "Machine Learning", "n8n", "Interactive Dashboards"],
+      color: "from-blue-500 to-cyan-500"
+    },
+    {
+      id: 2,
+      title: "Smart JD Auditor",
+      status: "Completed",
+      icon: <BarChart3 className="w-6 h-6" />,
+      description: "AI-driven job description quality assessment framework",
+      highlights: [
+        "95% reduction in poor-quality job descriptions",
+        "90% enhancement in role-skill alignment validation",
+        "NLP and LLM-powered semantic matching",
+        "Automated quality scoring with zero-shot classification",
+        "Structured scoring systems for JD evaluation"
+      ],
+      tech: ["NLP", "LLMs", "LangChain", "Embedding Models", "Zero-shot Classification"],
+      color: "from-violet-500 to-purple-500"
+    },
+    {
+      id: 3,
+      title: "Salesflow",
+      status: "Freelance",
+      icon: <TrendingUp className="w-6 h-6" />,
+      description: "Sales monitoring solution for primary and secondary tracking",
+      highlights: [
+        "Delivered MVP for sales monitoring solution",
+        "80% reduction in manual tracking efforts",
+        "8% revenue boost through enhanced sales visibility",
+        "Defined product roadmap and GTM strategy",
+        "Iterative feedback integration with stakeholders"
+      ],
+      tech: ["Product Strategy", "MVP Development", "Sales Analytics", "Stakeholder Management"],
+      color: "from-emerald-500 to-teal-500"
+    },
+    {
+      id: 4,
+      title: "Dynamic Batching Optimization",
+      status: "Completed",
+      icon: <BarChart3 className="w-6 h-6" />,
+      description: "Multidimensional analysis for logistics batching optimization",
+      highlights: [
+        "Optimized batching configuration (Wait Time & Haversine Distance)",
+        "Reduced breaches with minimal impact on O2A metrics",
+        "A/B testing for same-route batching configurations",
+        "Data-driven deployment and rollback strategies",
+        "Comprehensive performance analysis"
+      ],
+      tech: ["A/B Testing", "Geospatial Analysis", "Performance Optimization", "Data Analytics"],
+      color: "from-orange-500 to-red-500"
+    }
+  ];
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Hero Section */}
+      <div className="relative bg-white overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-50 to-gray-100 opacity-50" />
+        <div className="relative max-w-5xl mx-auto px-6 py-24">
+          <div 
+            className="transform transition-all duration-1000 ease-out"
+            style={{
+              opacity: Math.max(0, 1 - scrollY / 300),
+              transform: `translateY(${scrollY * 0.3}px)`
+            }}
+          >
+            <div className="flex items-center space-x-8 mb-8">
+              <div className="w-40 h-40 rounded-full bg-gradient-to-br from-blue-600 to-violet-600 flex items-center justify-center text-white text-5xl font-light overflow-hidden">
+              <img src="https://drive.google.com/uc?export=view&id=1a0WfQ2DC6iwbHniyiV6irRMe8AoQqDj8" alt="Divesh Jain" className="w-full h-full object-cover" />
+              </div>
+              <div>
+                <h1 className="text-5xl font-light text-gray-900 mb-2">
+                  Divesh Jain
+                </h1>
+                <p className="text-xl text-gray-600">
+                  Seeking Business Analyst / Data Scientist roles
+                </p>
+              </div>
+            </div>
+            <p className="text-lg text-gray-600 max-w-2xl leading-relaxed">
+              Transforming complex business challenges into intelligent, data-driven solutions through advanced analytics and machine learning.
+            </p>
+          </div>
+        </div>
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent" />
+      </div>
+
+      {/* Projects Section */}
+      <div className="max-w-5xl mx-auto px-6 py-20">
+        {/* Tab Navigation */}
+        <div className="flex space-x-1 mb-12 border-b border-gray-200">
+          <button
+            onClick={() => setActiveTab('projects')}
+            className={`px-6 py-3 text-sm font-medium transition-colors relative ${
+              activeTab === 'projects'
+                ? 'text-blue-600'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            Projects
+            {activeTab === 'projects' && (
+              <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600" />
+            )}
+          </button>
+          <button
+            onClick={() => setActiveTab('resume')}
+            className={`px-6 py-3 text-sm font-medium transition-colors relative ${
+              activeTab === 'resume'
+                ? 'text-blue-600'
+                : 'text-gray-600 hover:text-gray-900'
+            }`}
+          >
+            Resume
+            {activeTab === 'resume' && (
+              <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600" />
+            )}
+          </button>
+        </div>
+
+        {/* Projects Tab */}
+        {activeTab === 'projects' && (
+          <>
+            <h2 className="text-3xl font-light text-gray-900 mb-12">Featured Projects</h2>
+            
+            <div className="space-y-6">
+              {projects.map((project, index) => (
+                <div
+                  key={project.id}
+                  className="group bg-white rounded-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer"
+                  onMouseEnter={() => setActiveProject(project.id)}
+                  onMouseLeave={() => setActiveProject(null)}
+                >
+                  <div className="p-8">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-start space-x-4">
+                        <div className={`p-3 rounded-lg bg-gradient-to-br ${project.color} text-white transform group-hover:scale-110 transition-transform duration-300`}>
+                          {project.icon}
+                        </div>
+                        <div>
+                          <h3 className="text-2xl font-medium text-gray-900 group-hover:text-blue-600 transition-colors">
+                            {project.title}
+                          </h3>
+                          <p className="text-sm text-gray-500 mt-1">{project.description}</p>
+                        </div>
+                      </div>
+                      <span className="px-3 py-1 text-xs font-medium rounded-full bg-gray-100 text-gray-600">
+                        {project.status}
+                      </span>
+                    </div>
+
+                    <div className={`overflow-hidden transition-all duration-500 ${activeProject === project.id ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'}`}>
+                      <div className="pt-6 border-t border-gray-100 mt-6">
+                        <h4 className="text-sm font-medium text-gray-700 mb-3">Key Achievements</h4>
+                        <ul className="space-y-2">
+                          {project.highlights.map((highlight, idx) => (
+                            <li key={idx} className="flex items-start text-gray-600 text-sm">
+                              <ChevronRight className="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" />
+                              <span>{highlight}</span>
+                            </li>
+                          ))}
+                        </ul>
+                        
+                        <div className="mt-6">
+                          <h4 className="text-sm font-medium text-gray-700 mb-3">Technologies</h4>
+                          <div className="flex flex-wrap gap-2">
+                            {project.tech.map((tech, idx) => (
+                              <span key={idx} className="px-3 py-1 text-xs bg-gray-50 text-gray-700 rounded-full border border-gray-200">
+                                {tech}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {activeProject !== project.id && (
+                      <p className="text-sm text-gray-400 mt-4 group-hover:text-blue-600 transition-colors">
+                        Hover to see details →
+                      </p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
+        {/* Resume Tab */}
+        {activeTab === 'resume' && (
+          <div className="space-y-12">
+            {/* Download Resume Button */}
+            <div className="flex justify-end">
+              <a
+                href="#"
+                download="Divesh_Jain_Resume.pdf"
+                className="flex items-center space-x-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <span>Download Resume</span>
+              </a>
+            </div>
+            {/* Work Experience */}
+            <section>
+              <h2 className="text-3xl font-light text-gray-900 mb-2">Work Experience</h2>
+              <p className="text-gray-500 mb-8">5 Years</p>
+              
+              <div className="space-y-8">
+                {/* Zepto */}
+                <div className="bg-white rounded-lg border border-gray-200 p-8">
+                  <div className="flex justify-between items-start mb-4">
+                    <div>
+                      <h3 className="text-xl font-medium text-gray-900">Data Scientist, Product</h3>
+                      <p className="text-blue-600 font-medium mt-1">Zepto</p>
+                      <p className="text-sm text-gray-500 mt-1">A 10 min grocery delivery startup, YCW21</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-medium text-gray-700">May 2022 – Aug 2024</p>
+                      <p className="text-sm text-gray-500">Mumbai, India</p>
+                    </div>
+                  </div>
+                  <ul className="space-y-2 mt-6">
+                    <li className="flex items-start text-gray-600 text-sm">
+                      <ChevronRight className="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" />
+                      <span>Developed data-driven insights from user behavior across 1M+ monthly active users to inform product roadmap, leading to 8% increase in customer retention through A/B testing and user segmentation analysis.</span>
+                    </li>
+                    <li className="flex items-start text-gray-600 text-sm">
+                      <ChevronRight className="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" />
+                      <span>Designed and ran A/B tests to validate hypotheses on optimal delivery time thresholds (25 minutes), implementing statistical testing methodologies that improved customer adoption and reduced churn by 15%.</span>
+                    </li>
+                    <li className="flex items-start text-gray-600 text-sm">
+                      <ChevronRight className="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" />
+                      <span>Built comprehensive dashboards using BI tools (Superset) to track company-wide metrics and feature performance, implementing 70+ KPIs including user engagement, conversion rates, and growth metrics.</span>
+                    </li>
+                    <li className="flex items-start text-gray-600 text-sm">
+                      <ChevronRight className="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" />
+                      <span>Developed machine learning models for demand forecasting and inventory optimization, improving first-mile operational efficiency by 25% and reducing stockout incidents across 15+ city operations.</span>
+                    </li>
+                    <li className="flex items-start text-gray-600 text-sm">
+                      <ChevronRight className="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" />
+                      <span>Implemented clustering algorithms for customer segmentation, identifying high-value user cohorts that enabled targeted product features and improved conversion rates by 12%.</span>
+                    </li>
+                    <li className="flex items-start text-gray-600 text-sm">
+                      <ChevronRight className="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" />
+                      <span>Conducted sentiment analysis and NLP on 100K+ customer feedback entries to identify trends, driving 15+ product improvements that increased user satisfaction by 18%.</span>
+                    </li>
+                  </ul>
+                </div>
+
+                {/* Fractal Analytics */}
+                <div className="bg-white rounded-lg border border-gray-200 p-8">
+                  <div className="flex justify-between items-start mb-4">
+                    <div>
+                      <h3 className="text-xl font-medium text-gray-900">Analytics Consultant</h3>
+                      <p className="text-blue-600 font-medium mt-1">Fractal Analytics</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-medium text-gray-700">Aug 2019 – May 2022</p>
+                      <p className="text-sm text-gray-500">Mumbai, India</p>
+                    </div>
+                  </div>
+                  <ul className="space-y-2 mt-6">
+                    <li className="flex items-start text-gray-600 text-sm">
+                      <ChevronRight className="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" />
+                      <span>Developed data-driven solutions for consumer brands including Mondelez International, building analytics products that reduced report generation time by 95% and improved operational efficiency.</span>
+                    </li>
+                    <li className="flex items-start text-gray-600 text-sm">
+                      <ChevronRight className="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" />
+                      <span>Designed and implemented brand performance dashboards using BI tools (Tableau, Power BI), enabling stakeholders to interpret complex data sets and contributing to 10% increase in account revenue.</span>
+                    </li>
+                    <li className="flex items-start text-gray-600 text-sm">
+                      <ChevronRight className="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" />
+                      <span>Led A/B testing initiatives for 10+ high-value consumer product clients, creating ETL pipelines and data models that improved reporting efficiency by 40%.</span>
+                    </li>
+                    <li className="flex items-start text-gray-600 text-sm">
+                      <ChevronRight className="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" />
+                      <span>Built 25+ interactive dashboards in Tableau and Power BI, tracking growth metrics across 500M+ data points, enabling data-driven decisions for 50+ stakeholders and reducing report generation time by 40%.</span>
+                    </li>
+                    <li className="flex items-start text-gray-600 text-sm">
+                      <ChevronRight className="w-4 h-4 text-blue-500 mr-2 mt-0.5 flex-shrink-0" />
+                      <span>Established data governance protocols and leveraged cohort, funnel, and survival analysis to identify behavioral trends, guiding product roadmap and retention strategies.</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </section>
+
+            {/* Skills */}
+            <section>
+              <h2 className="text-3xl font-light text-gray-900 mb-8">Skills</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="bg-white rounded-lg border border-gray-200 p-6">
+                  <h3 className="text-sm font-medium text-gray-700 mb-4">Languages & Databases</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {['Python', 'SQL (Advanced)', 'MySQL', 'R', 'Spark', 'Oracle', 'PySpark', 'Snowflake'].map((skill) => (
+                      <span key={skill} className="px-3 py-1 text-xs bg-blue-50 text-blue-700 rounded-full">
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <div className="bg-white rounded-lg border border-gray-200 p-6">
+                  <h3 className="text-sm font-medium text-gray-700 mb-4">Technologies & Tools</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {['Tableau', 'Power BI', 'Alteryx', 'Hadoop', 'HDFS', 'MapReduce', 'Apache Superset', 'REST API', 'Airflow'].map((skill) => (
+                      <span key={skill} className="px-3 py-1 text-xs bg-violet-50 text-violet-700 rounded-full">
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <div className="bg-white rounded-lg border border-gray-200 p-6">
+                  <h3 className="text-sm font-medium text-gray-700 mb-4">AI Stack</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {['Lovable', 'Supabase', 'n8n', 'Zapier', 'Cursor'].map((skill) => (
+                      <span key={skill} className="px-3 py-1 text-xs bg-emerald-50 text-emerald-700 rounded-full">
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* Education */}
+            <section>
+              <h2 className="text-3xl font-light text-gray-900 mb-8">Education</h2>
+              <div className="space-y-6">
+                <div className="bg-white rounded-lg border border-gray-200 p-6">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h3 className="text-lg font-medium text-gray-900">Master of Science in Information Management</h3>
+                      <p className="text-blue-600 font-medium mt-1">University of Washington</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-medium text-gray-700">Aug 2025</p>
+                      <p className="text-sm text-gray-500">Seattle, WA</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="bg-white rounded-lg border border-gray-200 p-6">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h3 className="text-lg font-medium text-gray-900">Bachelor of Engineering in Computer Science</h3>
+                      <p className="text-blue-600 font-medium mt-1">Rajiv Gandhi Proudyogiki Vishwavidyalaya</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-medium text-gray-700">June 2019</p>
+                      <p className="text-sm text-gray-500">Indore, India</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+        )}
+      </div>
+
+      {/* Contact Section */}
+      <div className="bg-white border-t border-gray-200">
+        <div className="max-w-5xl mx-auto px-6 py-16">
+          <div className="text-center">
+            <h2 className="text-3xl font-light text-gray-900 mb-4">Let's Connect</h2>
+            <p className="text-gray-600 mb-8 max-w-xl mx-auto">
+              Interested in collaborating or discussing business analytics solutions? I'd love to hear from you.
+            </p>
+            
+            <div className="flex justify-center space-x-6">
+              <a
+                href="mailto:diveshjain2019@gmail.com"
+                className="flex items-center space-x-2 px-6 py-3 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
+              >
+                <Mail className="w-5 h-5" />
+                <span>Email Me</span>
+              </a>
+              <a
+                href="https://www.linkedin.com/in/divesh-jain/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center space-x-2 px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:border-gray-400 hover:bg-gray-50 transition-colors"
+              >
+                <Linkedin className="w-5 h-5" />
+                <span>LinkedIn</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <div className="bg-gray-50 border-t border-gray-200">
+        <div className="max-w-5xl mx-auto px-6 py-8 text-center text-sm text-gray-500">
+          <p>© 2025 Divesh Jain. Crafted with precision.</p>
+        </div>
+      </div>
+    </div>
+  );
+}
